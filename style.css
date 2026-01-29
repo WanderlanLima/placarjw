@@ -419,70 +419,122 @@ header h1 {
 /* --- Landscape Mode (Mobile & Tablet) --- */
 @media (orientation: landscape) and (max-width: 1024px) {
   header {
-    padding: 0.4rem;
+    padding: 0.2rem 1rem;
     min-height: 40px;
   }
 
   header h1 {
-    font-size: 0.9rem;
+    font-size: 1rem;
     display: inline-block;
+    margin-right: auto;
   }
 
   #page-title {
     display: none;
-    /* Hide title in landscape to save extreme vertical space if needed, or keep small */
+  }
+
+  #back-btn {
+    padding: 0;
   }
 
   /* Make menu side-by-side in landscape */
   #menu-view {
     flex-direction: row;
-    align-items: stretch;
+    align-items: center;
     padding: 1rem;
   }
 
   .menu-card {
-    width: 45%;
-    padding: 1rem;
+    width: 40%;
+    margin: 0 1rem;
+    padding: 1.5rem;
   }
 
-  /* Compact Scoreboard */
+  /* GRID LAYOUT FOR LANDSCAPE SCOREBOARD */
   .scoreboard {
-    flex-direction: row;
-    /* Horizontal layout for some controls if possible, or just compact vertical */
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 200px 1fr;
+    /* Team Left | Center Controls | Team Right */
+    grid-template-rows: auto;
+    grid-template-areas:
+      "teamA center teamB";
+    gap: 1rem;
     align-items: center;
     justify-content: center;
-  }
-
-  .score-area {
-    flex: 2;
-    /* Take most space */
+    padding: 0.5rem 1rem;
     height: 100%;
+    overflow-y: hidden;
+    /* Grid handles vertical fit better usually */
   }
 
+  /* Use display: contents to unwrap the .score-area container so teams become grid items */
+  .score-area {
+    display: contents;
+  }
+
+  /* Target the first and second team-column specifically */
+  /* Note: We need a way to target them. :nth-child works if they are direct children now. 
+     .score-area is gone from rendering tree due to display: contents */
+
+  .team-column:nth-child(1) {
+    grid-area: teamA;
+    height: 100%;
+    max-height: 85dvh;
+  }
+
+  /* The second child of .score-area (which is effectively the 2nd team column in the grid) */
+  .team-column:nth-of-type(2) {
+    grid-area: teamB;
+    height: 100%;
+    max-height: 85dvh;
+  }
+
+  /* The center column containing Timer/Sets and Controls */
+  /* Logic: We have to wrap these or target them if they are separate. 
+     In HTML: .sets-display/timer-container are likely inside .scoreboard directly or wrapping.
+     Let's check HTML structure assumptions:
+     Volleyball: .sets-display, .score-area, .controls
+     Futsal: .timer-container, .score-area, .controls
+     
+     So we have 3 direct children of .scoreboard (excluding the unwrapped .score-area items).
+     Wait, .score-area children are inserted between the top element and .controls.
+     
+     Let's define the center stack.
+  */
+
+  /* Timer or Sets Display */
+  .sets-display,
+  .timer-container {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    margin-top: 1rem;
+    z-index: 2;
+  }
+
+  /* Controls (Novo Jogo) */
   .controls {
-    flex: 0 0 auto;
-    width: auto;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    margin-bottom: 1rem;
     flex-direction: column;
-    /* Stack controls on side */
+    z-index: 2;
   }
 
   .team-column {
     height: 100%;
-    /* Full height of container */
+    justify-content: center;
   }
 
   .score-btn {
-    font-size: 10vh;
-    /* Based on height now */
+    font-size: 15vh;
   }
 
-  .timer-container {
-    padding: 0.2rem;
-  }
-
-  .timer {
-    font-size: 1.5rem;
+  .team-name {
+    position: static;
+    /* Let it sit naturally in the flex column */
+    margin-bottom: 0.5rem;
   }
 }
 
