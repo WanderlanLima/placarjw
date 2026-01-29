@@ -416,8 +416,8 @@ header h1 {
   }
 }
 
-/* --- Landscape Mode (Mobile) --- */
-@media (max-height: 500px) and (orientation: landscape) {
+/* --- Landscape Mode (Mobile & Tablet) --- */
+@media (orientation: landscape) and (max-width: 1024px) {
   header {
     padding: 0.4rem;
     min-height: 40px;
