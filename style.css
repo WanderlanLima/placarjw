@@ -101,10 +101,13 @@ header h1 {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  flex: 1;
+  /* Allow title to take space */
 }
 
 #theme-btn,
-#back-btn {
+#back-btn,
+#fullscreen-btn {
   background: none;
   border: none;
   color: var(--text-color);
@@ -118,7 +121,8 @@ header h1 {
 }
 
 #theme-btn:active,
-#back-btn:active {
+#back-btn:active,
+#fullscreen-btn:active {
   background: var(--border-color);
 }
 
@@ -204,6 +208,28 @@ header h1 {
   padding: 1rem;
   gap: 1rem;
   overflow-y: auto;
+  position: relative;
+}
+
+.top-bar-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -10px;
+}
+
+.control-btn-small {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.control-btn-small:active {
+  background: var(--border-color);
+  color: var(--text-color);
 }
 
 .score-area {
@@ -422,6 +448,44 @@ body.light-mode .sets-display {
   box-shadow: 0 0 0 2px rgba(157, 78, 221, 0.3);
 }
 
+/* --- Toast Notification --- */
+.update-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--surface-color);
+  border: 1px solid var(--primary-color);
+  padding: 12px 20px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.update-toast.active {
+  transform: translateX(-50%) translateY(0);
+}
+
+.update-toast span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.update-toast button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
   header {
@@ -519,7 +583,26 @@ body.light-mode .sets-display {
     display: contents;
   }
 
-  .team-column:nth-child(1) {
+  .team-column:nth-child(2) {
+    /* Adjusted selector for grid items since child index changed with score-area possibly being flattened or div structure */
+    grid-area: teamA;
+    /* Actually team-column are inside score-area. With display:contents on score-area, they become grid items. */
+    height: 100%;
+    max-height: 85dvh;
+  }
+
+  /* Select direct children of score-area if display contents used, or just target by ID if present */
+  #v-team-a,
+  .team-column:nth-of-type(1) {
+    grid-area: teamA;
+  }
+
+  #v-team-b,
+  .team-column:nth-of-type(2) {
+    grid-area: teamB;
+  }
+
+  .team-column:nth-of-type(1) {
     grid-area: teamA;
     height: 100%;
     max-height: 85dvh;
@@ -545,6 +628,16 @@ body.light-mode .sets-display {
     margin: 0;
     flex-direction: column;
     z-index: 2;
+  }
+
+  .top-bar-controls {
+    display: none;
+    /* Hide undo on landscape to save space or move it? */
+    /* Or make it absolute */
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 20;
   }
 
   .team-column {

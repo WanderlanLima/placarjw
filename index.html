@@ -17,7 +17,10 @@
     <header>
         <button id="back-btn" onclick="app.goBack()">&#8592;</button>
         <h1 id="page-title">Placar Esportivo</h1>
-        <button id="theme-btn" onclick="app.toggleTheme()">🌙</button>
+        <div style="display: flex; gap: 10px;">
+            <button id="fullscreen-btn" onclick="app.toggleFullscreen()">⛶</button>
+            <button id="theme-btn" onclick="app.toggleTheme()">🌙</button>
+        </div>
     </header>
 
     <div id="app">
@@ -40,6 +43,9 @@
         <!-- VOLLEYBALL BOARD -->
         <div id="volleyball-view" class="view">
             <div class="scoreboard">
+                <div class="top-bar-controls">
+                    <button class="control-btn-small" onclick="volleyball.undo()">↩️ Desfazer</button>
+                </div>
                 <div class="sets-display" style="justify-content: center; padding: 10px;">
                     Sets: <span id="v-sets-a">0</span> - <span id="v-sets-b">0</span>
                 </div>
@@ -71,6 +77,9 @@
         <!-- FUTSAL BOARD -->
         <div id="futsal-view" class="view">
             <div class="scoreboard">
+                <div class="top-bar-controls">
+                    <button class="control-btn-small" onclick="futsal.undo()">↩️ Desfazer</button>
+                </div>
                 <div class="timer-container">
                     <div id="f-timer" class="timer paused" onclick="futsal.toggleTimer()">10:00</div>
                     <div style="display: flex; gap: 10px; margin-top: 5px;">
@@ -138,6 +147,12 @@
         </div>
     </div>
 
+    <!-- Update Notification -->
+    <div id="update-toast" class="update-toast">
+        <span>Nova versão disponível!</span>
+        <button onclick="window.location.reload()">Atualizar</button>
+    </div>
+
     <!-- Scripts -->
     <script src="modules/volleyball.js"></script>
     <script src="modules/futsal.js"></script>
@@ -145,9 +160,28 @@
     <script>
         // Register Service Worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW Registered!', reg))
-                .catch(err => console.log('SW Failed', err));
+            navigator.serviceWorker.register('./sw.js').then(reg => {
+                console.log('SW Registered!', reg);
+
+                // Check if there's an update waiting
+                if (reg.waiting) {
+                    showUpdateToast();
+                }
+
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            showUpdateToast();
+                        }
+                    });
+                });
+            }).catch(err => console.log('SW Failed', err));
+        }
+
+        function showUpdateToast() {
+            const toast = document.getElementById('update-toast');
+            if (toast) toast.classList.add('active');
         }
     </script>
 </body>

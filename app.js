@@ -142,6 +142,80 @@ const app = {
         setTimeout(() => {
             inputEl.focus();
         }, 100); // Focus after animation starts
+    },
+
+    // === Helpers ===
+
+    // Fullscreen Toggle
+    toggleFullscreen: () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch((err) => {
+                console.log(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    },
+
+    // Wake Lock
+    wakeLock: null,
+    requestWakeLock: async () => {
+        if ('wakeLock' in navigator) {
+            try {
+                app.wakeLock = await navigator.wakeLock.request('screen');
+                app.wakeLock.addEventListener('release', () => {
+                    console.log('Wake Lock released');
+                });
+                console.log('Wake Lock active');
+            } catch (err) {
+                console.error(`${err.name}, ${err.message}`);
+            }
+        }
+    },
+
+    // Haptic Feedback
+    vibrate: () => {
+        if (navigator.vibrate) {
+            navigator.vibrate(50); // Short tick
+        }
+    },
+
+    // Sound Feedback
+    beep: (type = 'success') => {
+        // Simple AudioContext beep
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'success') {
+            osc.type = 'sine';
+            osc.frequency.value = 600; // Hz
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.2); // 200ms
+        } else if (type === 'alert') {
+            osc.type = 'triangle';
+            osc.frequency.value = 400;
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        }
+    },
+
+    // Persistence
+    saveState: (key, data) => {
+        localStorage.setItem(key, JSON.stringify(data));
+    },
+
+    loadState: (key) => {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : null;
     }
 };
 
@@ -192,4 +266,22 @@ document.addEventListener('DOMContentLoaded', () => {
     history.replaceState({ view: 'menu' }, '', '#menu');
     app.showView('menu');
     app.initTheme();
+
+    // Request Wake Lock
+    app.requestWakeLock();
+    // Re-request wake lock when visibility changes (if it was lost)
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            app.requestWakeLock();
+        }
+    });
+
+    // Check for SW updates
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            // Reload if controller changed
+            // window.location.reload(); 
+            // We can prompt user instead
+        });
+    }
 });
