@@ -1,4 +1,4 @@
-const CACHE_NAME = 'placar-app-v2';
+const CACHE_NAME = 'placar-app-v3';
 const ASSETS = [
   './',
   './index.html',

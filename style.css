@@ -345,7 +345,6 @@ header h1 {
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
 
-
   /* Compact Header */
   header {
     padding: 0.8rem;
@@ -371,6 +370,10 @@ header h1 {
   .scoreboard {
     padding: 0.5rem;
     gap: 0.5rem;
+    overflow-y: auto;
+    /* Safety scrolling */
+    min-height: 0;
+    /* Important for grid/flex nested scrolling */
   }
 
   .score-area {
@@ -390,7 +393,7 @@ header h1 {
 
   .score-btn {
     font-size: 18vw;
-    /* Responsive font size based on viewport width */
+    /* default mobile */
   }
 
   /* Adjust controls buttons */
@@ -413,15 +416,88 @@ header h1 {
   }
 }
 
-@media (max-width: 480px) {
+/* --- Landscape Mode (Mobile) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+  header {
+    padding: 0.4rem;
+    min-height: 40px;
+  }
 
-  /* Extra small screens */
+  header h1 {
+    font-size: 0.9rem;
+    display: inline-block;
+  }
+
+  #page-title {
+    display: none;
+    /* Hide title in landscape to save extreme vertical space if needed, or keep small */
+  }
+
+  /* Make menu side-by-side in landscape */
+  #menu-view {
+    flex-direction: row;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .menu-card {
+    width: 45%;
+    padding: 1rem;
+  }
+
+  /* Compact Scoreboard */
+  .scoreboard {
+    flex-direction: row;
+    /* Horizontal layout for some controls if possible, or just compact vertical */
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .score-area {
+    flex: 2;
+    /* Take most space */
+    height: 100%;
+  }
+
+  .controls {
+    flex: 0 0 auto;
+    width: auto;
+    flex-direction: column;
+    /* Stack controls on side */
+  }
+
+  .team-column {
+    height: 100%;
+    /* Full height of container */
+  }
+
   .score-btn {
-    font-size: 20vw;
-    /* Even smaller for very narrow screens */
+    font-size: 10vh;
+    /* Based on height now */
+  }
+
+  .timer-container {
+    padding: 0.2rem;
+  }
+
+  .timer {
+    font-size: 1.5rem;
+  }
+}
+
+/* --- Tiny Screens --- */
+@media (max-width: 360px) {
+  .score-btn {
+    font-size: 15vw;
+  }
+
+  .control-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
   }
 
   .team-name {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 }
