@@ -1,6 +1,18 @@
 const app = {
     // Navigate between views
     navigateTo: (view) => {
+        // If navigating to a game view, push state
+        if (view !== 'menu') {
+            history.pushState({ view: view }, '', `#${view}`);
+            app.showView(view);
+        } else {
+            // If navigating to menu, just show it (popstate handles the rest or direct call)
+            app.showView('menu');
+        }
+    },
+
+    // Internal function to actually switch DOM elements
+    showView: (view) => {
         // Hide all views
         document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
 
@@ -20,7 +32,13 @@ const app = {
     },
 
     goBack: () => {
-        app.navigateTo('menu');
+        // If using browser history, going back is just history.back()
+        if (history.state && history.state.view) {
+            history.back();
+        } else {
+            // Fallback if accessed directly or state is missing
+            app.navigateTo('menu');
+        }
     },
 
     editName: (el) => {
@@ -127,7 +145,19 @@ const app = {
     }
 };
 
+// Handle System Back Button
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.view) {
+        app.showView(event.state.view);
+    } else {
+        // If no state, assume menu (root)
+        app.showView('menu');
+    }
+});
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    app.navigateTo('menu');
+    // Replace current state with menu to handle initial back properly
+    history.replaceState({ view: 'menu' }, '', '#menu');
+    app.showView('menu');
 });
