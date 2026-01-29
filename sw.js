@@ -1,4 +1,4 @@
-const CACHE_NAME = 'placar-app-v12';
+const CACHE_NAME = 'placar-app-v13';
 const ASSETS = [
   './',
   './index.html',
@@ -6,7 +6,9 @@ const ASSETS = [
   './app.js',
   './manifest.json',
   './modules/volleyball.js',
-  './modules/futsal.js'
+  './modules/futsal.js',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {

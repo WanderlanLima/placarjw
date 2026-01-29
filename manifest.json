@@ -1,6 +1,6 @@
 {
-  "name": "Placar Vôlei & Futsal",
-  "short_name": "Placar",
+  "name": "Placar JW",
+  "short_name": "Placar JW",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#121212",
@@ -8,12 +8,12 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/33/33308.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/33/33308.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
