@@ -454,87 +454,83 @@ header h1 {
   .scoreboard {
     display: grid;
     grid-template-columns: 1fr 200px 1fr;
-    /* Team Left | Center Controls | Team Right */
-    grid-template-rows: auto;
+    /* Team Left | Center Info | Team Right */
+    grid-template-rows: auto auto;
+    /* Info row | Controls row */
     grid-template-areas:
-      "teamA center teamB";
-    gap: 1rem;
+      "teamA info teamB"
+      "teamA controls teamB";
+    gap: 0.5rem 1rem;
+    /* Row gap | Col gap */
     align-items: center;
     justify-content: center;
     padding: 0.5rem 1rem;
     height: 100%;
     overflow-y: hidden;
-    /* Grid handles vertical fit better usually */
   }
 
-  /* Use display: contents to unwrap the .score-area container so teams become grid items */
+  /* Use display: contents to unwrap the .score-area */
   .score-area {
     display: contents;
   }
 
-  /* Target the first and second team-column specifically */
-  /* Note: We need a way to target them. :nth-child works if they are direct children now. 
-     .score-area is gone from rendering tree due to display: contents */
-
+  /* Team Columns span 2 rows to fill height */
   .team-column:nth-child(1) {
     grid-area: teamA;
     height: 100%;
     max-height: 85dvh;
   }
 
-  /* The second child of .score-area (which is effectively the 2nd team column in the grid) */
   .team-column:nth-of-type(2) {
     grid-area: teamB;
     height: 100%;
     max-height: 85dvh;
   }
 
-  /* The center column containing Timer/Sets and Controls */
-  /* Logic: We have to wrap these or target them if they are separate. 
-     In HTML: .sets-display/timer-container are likely inside .scoreboard directly or wrapping.
-     Let's check HTML structure assumptions:
-     Volleyball: .sets-display, .score-area, .controls
-     Futsal: .timer-container, .score-area, .controls
-     
-     So we have 3 direct children of .scoreboard (excluding the unwrapped .score-area items).
-     Wait, .score-area children are inserted between the top element and .controls.
-     
-     Let's define the center stack.
-  */
-
-  /* Timer or Sets Display */
+  /* Center Top: Timer or Sets */
   .sets-display,
   .timer-container {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: start;
-    margin-top: 1rem;
+    grid-area: info;
+    align-self: end;
+    /* Push to bottom of its cell (closer to controls) */
+    margin: 0;
     z-index: 2;
   }
 
-  /* Controls (Novo Jogo) */
+  /* Center Bottom: Controls */
   .controls {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: end;
-    margin-bottom: 1rem;
+    grid-area: controls;
+    align-self: start;
+    /* Push to top of its cell (closer to timer) */
+    margin: 0;
     flex-direction: column;
     z-index: 2;
   }
 
+  /* Ensure content inside team columns is centered */
   .team-column {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
   }
 
   .score-btn {
     font-size: 15vh;
+    margin: 0;
   }
 
   .team-name {
     position: static;
-    /* Let it sit naturally in the flex column */
     margin-bottom: 0.5rem;
+  }
+
+  .sets-display {
+    font-size: 1.2rem;
+  }
+
+  .timer {
+    font-size: 2rem;
   }
 }
 
