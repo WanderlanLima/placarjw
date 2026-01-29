@@ -1,0 +1,133 @@
+const app = {
+    // Navigate between views
+    navigateTo: (view) => {
+        // Hide all views
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+
+        // Show target view
+        document.getElementById(`${view}-view`).classList.add('active');
+
+        // Update header
+        const titleMap = {
+            'menu': 'Placar Esportivo',
+            'volleyball': 'Vôlei',
+            'futsal': 'Futsal'
+        };
+        document.getElementById('page-title').innerText = titleMap[view] || 'Placar';
+
+        // Show/Hide back button
+        document.getElementById('back-btn').style.display = view === 'menu' ? 'none' : 'block';
+    },
+
+    goBack: () => {
+        app.navigateTo('menu');
+    },
+
+    editName: (el) => {
+        const currentName = el.innerText.replace(" ✏️", "");
+        // Use text input for names
+        app.input("Nome do time:", currentName, (newName) => {
+            if (newName && newName.trim() !== "") {
+                el.innerText = newName + " ✏️";
+            }
+        }, 'text');
+    },
+
+    // Custom Modal Logic
+    closeModal: () => {
+        document.getElementById('custom-modal').classList.remove('active');
+    },
+
+    alert: (message) => {
+        const modal = document.getElementById('custom-modal');
+        const msgEl = document.getElementById('modal-msg');
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        const cancelBtn = document.querySelector('.modal-btn.cancel');
+
+        msgEl.innerText = message;
+
+        // Setup for Alert (Single Button)
+        cancelBtn.style.display = 'none';
+        confirmBtn.innerText = "OK";
+
+        // Remove old listeners
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+        newBtn.addEventListener('click', () => {
+            app.closeModal();
+        });
+
+        modal.classList.add('active');
+    },
+
+    confirm: (message, onConfirm) => {
+        const modal = document.getElementById('custom-modal');
+        const msgEl = document.getElementById('modal-msg');
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        const cancelBtn = document.querySelector('.modal-btn.cancel');
+
+        msgEl.innerText = message;
+
+        // Setup for Confirm (Two Buttons)
+        cancelBtn.style.display = 'block';
+        confirmBtn.innerText = "Sim";
+
+        // Remove old listeners to prevent multiple firings
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+        newBtn.addEventListener('click', () => {
+            onConfirm();
+            app.closeModal();
+        });
+
+        modal.classList.add('active');
+    },
+
+    // Custom Input Modal Logic
+    closeInputModal: () => {
+        document.getElementById('input-modal').classList.remove('active');
+    },
+
+    input: (message, defaultValue, onConfirm, type = 'number') => {
+        const modal = document.getElementById('input-modal');
+        const msgEl = document.getElementById('input-modal-msg');
+        const inputEl = document.getElementById('input-modal-field');
+        const confirmBtn = document.getElementById('input-modal-confirm-btn');
+
+        // Configure input type
+        if (type === 'text') {
+            inputEl.type = 'text';
+            inputEl.removeAttribute('inputmode');
+        } else {
+            inputEl.type = 'number';
+            inputEl.setAttribute('inputmode', 'numeric');
+        }
+
+        msgEl.innerText = message;
+        inputEl.value = "";
+        inputEl.placeholder = defaultValue;
+
+        // Cloning to remove listeners
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+
+        newBtn.addEventListener('click', () => {
+            if (inputEl.value) {
+                onConfirm(inputEl.value);
+                app.closeInputModal();
+            }
+        });
+
+        modal.classList.add('active');
+        setTimeout(() => {
+            inputEl.focus();
+        }, 100); // Focus after animation starts
+    }
+};
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    app.navigateTo('menu');
+});

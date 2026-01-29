@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Placar App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <!-- Google Fots -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <button id="back-btn" onclick="app.goBack()">&#8592;</button>
+        <h1 id="page-title">Placar Esportivo</h1>
+        <div style="width: 40px;"></div> <!-- Spacer -->
+    </header>
+
+    <div id="app">
+
+        <!-- MAIN MENU -->
+        <div id="menu-view" class="view active">
+            <div class="menu-card" onclick="app.navigateTo('volleyball')">
+                <span class="card-icon">🏐</span>
+                <h2>Vôlei</h2>
+                <p>Sets, Pontos e Rodízio</p>
+            </div>
+
+            <div class="menu-card" onclick="app.navigateTo('futsal')">
+                <span class="card-icon">⚽</span>
+                <h2>Futsal</h2>
+                <p>Gols, Faltas e Cronômetro</p>
+            </div>
+        </div>
+
+        <!-- VOLLEYBALL BOARD -->
+        <div id="volleyball-view" class="view">
+            <div class="scoreboard">
+                <div class="sets-display" style="justify-content: center; padding: 10px;">
+                    Sets: <span id="v-sets-a">0</span> - <span id="v-sets-b">0</span>
+                </div>
+
+                <div class="score-area">
+                    <div class="team-column" id="v-team-a">
+                        <span class="team-name" onclick="app.editName(this)">Time A ✏️</span>
+                        <button class="score-btn" onclick="volleyball.addPoint('a')">0</button>
+                        <div class="controls">
+                            <button class="control-btn minus" onclick="volleyball.remPoint('a')">-1</button>
+                        </div>
+                    </div>
+
+                    <div class="team-column" id="v-team-b">
+                        <span class="team-name" onclick="app.editName(this)">Time B ✏️</span>
+                        <button class="score-btn" onclick="volleyball.addPoint('b')">0</button>
+                        <div class="controls">
+                            <button class="control-btn minus" onclick="volleyball.remPoint('b')">-1</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="control-btn" onclick="volleyball.resetGame()">Novo Jogo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FUTSAL BOARD -->
+        <div id="futsal-view" class="view">
+            <div class="scoreboard">
+                <div class="timer-container">
+                    <div id="f-timer" class="timer paused" onclick="futsal.toggleTimer()">10:00</div>
+                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                        <small style="color: grey;" onclick="futsal.toggleTimer()">Toque para Iniciar</small>
+                        <span style="color: #333">|</span>
+                        <small style="color: var(--primary-color); cursor: pointer;" onclick="futsal.setTime()">⏱️ Mudar
+                            Tempo</small>
+                    </div>
+                </div>
+
+                <div class="score-area">
+                    <div class="team-column">
+                        <span class="team-name" onclick="app.editName(this)">Casa ✏️</span>
+                        <button class="score-btn" onclick="futsal.addGoal('a')">0</button>
+                        <div class="controls">
+                            <button class="control-btn minus" onclick="futsal.remGoal('a')">-1</button>
+                        </div>
+                        <div style="margin-bottom: 10px; color: #ff3d00;">
+                            Faltas: <span id="f-fouls-a">0</span> <button class="control-btn"
+                                style="padding: 2px 8px; font-size: 0.8rem;" onclick="futsal.addFoul('a')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="team-column">
+                        <span class="team-name" onclick="app.editName(this)">Visitante ✏️</span>
+                        <button class="score-btn" onclick="futsal.addGoal('b')">0</button>
+                        <div class="controls">
+                            <button class="control-btn minus" onclick="futsal.remGoal('b')">-1</button>
+                        </div>
+                        <div style="margin-bottom: 10px; color: #ff3d00;">
+                            Faltas: <span id="f-fouls-b">0</span> <button class="control-btn"
+                                style="padding: 2px 8px; font-size: 0.8rem;" onclick="futsal.addFoul('b')">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="control-btn" onclick="futsal.resetGame()">Novo Jogo</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-msg">Tem certeza?</h3>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="app.closeModal()">Cancelar</button>
+                <button id="modal-confirm-btn" class="modal-btn confirm">Sim</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Input Modal -->
+    <div id="input-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="input-modal-msg">Digite:</h3>
+            <input type="number" id="input-modal-field" class="modal-input" inputmode="numeric" />
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="app.closeInputModal()">Cancelar</button>
+                <button id="input-modal-confirm-btn" class="modal-btn confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="modules/volleyball.js"></script>
+    <script src="modules/futsal.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW Registered!', reg))
+                .catch(err => console.log('SW Failed', err));
+        }
+    </script>
+</body>
+
+</html>
