@@ -155,9 +155,41 @@ window.addEventListener('popstate', (event) => {
     }
 });
 
+// App Extension for Theme
+app.toggleTheme = () => {
+    const body = document.body;
+    const btn = document.getElementById('theme-btn');
+
+    // Toggle Class
+    body.classList.toggle('light-mode');
+
+    // Check Status
+    const isLight = body.classList.contains('light-mode');
+
+    // Update Icon
+    btn.innerText = isLight ? '☀️' : '🌙';
+
+    // Persist
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+};
+
+app.initTheme = () => {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+
+    if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+        document.body.classList.add('light-mode');
+        document.getElementById('theme-btn').innerText = '☀️';
+    } else {
+        // Default Dark
+        document.getElementById('theme-btn').innerText = '🌙';
+    }
+};
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     // Replace current state with menu to handle initial back properly
     history.replaceState({ view: 'menu' }, '', '#menu');
     app.showView('menu');
+    app.initTheme();
 });

@@ -1,21 +1,62 @@
 :root {
-  --bg-color: #121212;
-  --surface-color: #1e1e1e;
-  --primary-color: #00e676;
-  /* Neon Green */
-  --secondary-color: #ff3d00;
-  /* Neon Orange */
-  --text-color: #ffffff;
-  --text-dim: #b0b0b0;
-  --font-main: 'Inter', sans-serif;
+  /* DARK THEME (DEEP SATURATED PURPLE) */
+  --bg-color: #0f0b29;
+  /* Saturated Deep Violet (Easy on eyes) */
+  --surface-color: #1a153a;
+  /* Rich Purple Surface */
+  --primary-color: #9d4edd;
+  /* Electric Violet */
+  --secondary-color: #00e5ff;
+  /* Cyan stays */
+  --text-color: #e9d5ff;
+  /* Off-white with slight lavender tint */
+  --text-dim: #9ca3af;
+  --border-color: rgba(157, 78, 221, 0.2);
+  /* Saturated purple tint */
+  --shadow-color: rgba(0, 0, 0, 0.7);
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
 }
 
+/* LIGHT THEME OVERRIDES */
+body.light-mode {
+  --bg-color: #f3e8ff;
+  /* Lavender */
+  --surface-color: #ffffff;
+  --primary-color: #7e22ce;
+  /* Dark Violet */
+  --secondary-color: #0e7490;
+  /* Dark Cyan */
+  --text-color: #3b0764;
+  /* Very dark purple */
+  --text-dim: #6b7280;
+  --border-color: rgba(126, 34, 206, 0.15);
+  --shadow-color: rgba(126, 34, 206, 0.08);
+}
+
+/* RESET */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   user-select: none;
-  /* Prevent text selection on repeated clicks */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* GLOBAL TRANSITIONS */
+body,
+header,
+.menu-card,
+.team-column,
+.timer-container,
+.modal-content,
+.control-btn,
+.modal-input,
+.sets-display {
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.2s ease;
 }
 
 body {
@@ -24,7 +65,6 @@ body {
   color: var(--text-color);
   height: 100vh;
   height: 100dvh;
-  /* Mobile browser friendly height */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -43,31 +83,47 @@ body {
 }
 
 header {
-  padding: 1rem;
-  background: rgba(30, 30, 30, 0.8);
-  backdrop-filter: blur(10px);
+  padding: 0.8rem 1.2rem;
+  background: var(--surface-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 10;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px var(--shadow-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 header h1 {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   letter-spacing: 0.5px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
+#theme-btn,
 #back-btn {
   background: none;
   border: none;
   color: var(--text-color);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#theme-btn:active,
+#back-btn:active {
+  background: var(--border-color);
+}
+
+#back-btn {
   display: none;
-  /* Hidden on menu */
 }
 
 /* --- Views --- */
@@ -81,13 +137,13 @@ header h1 {
 .view.active {
   display: flex;
   flex-direction: column;
-  animation: fadeIn 0.3s ease;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeIn {
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
 
   to {
@@ -100,40 +156,44 @@ header h1 {
 #menu-view {
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  padding: 1rem;
 }
 
 .menu-card {
-  width: 80%;
-  max-width: 300px;
-  padding: 2rem;
+  width: 100%;
+  max-width: 340px;
+  padding: 2.5rem;
   background: var(--surface-color);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px var(--shadow-color);
+  border: 1px solid var(--border-color);
 }
 
 .menu-card:active {
-  transform: scale(0.95);
+  transform: scale(0.97);
 }
 
 .menu-card h2 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
 }
 
 .menu-card p {
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .card-icon {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 1rem;
   display: block;
+  filter: drop-shadow(0 0 10px rgba(157, 78, 221, 0.3));
+  /* Purple Glow */
 }
 
 /* --- Scoreboard General --- */
@@ -143,6 +203,7 @@ header h1 {
   flex-direction: column;
   padding: 1rem;
   gap: 1rem;
+  overflow-y: auto;
 }
 
 .score-area {
@@ -154,14 +215,15 @@ header h1 {
 .team-column {
   flex: 1;
   background: var(--surface-color);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 15px var(--shadow-color);
   overflow: hidden;
+  border: 1px solid var(--border-color);
 }
 
 /* Clickable area for score */
@@ -172,7 +234,8 @@ header h1 {
   background: none;
   color: var(--text-color);
   font-size: 6rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -2px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -181,20 +244,19 @@ header h1 {
 }
 
 .score-btn:active {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--border-color);
 }
 
 .team-name {
   position: absolute;
-  top: 1rem;
-  font-size: 1.2rem;
-  font-weight: 500;
+  top: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: var(--text-dim);
   text-transform: uppercase;
   cursor: pointer;
-  /* Indicates clickable */
   z-index: 5;
-  /* Ensure it's above the score button area if overlaps, though absolute positioning handles this */
+  letter-spacing: 1px;
 }
 
 .team-name:hover {
@@ -210,32 +272,41 @@ header h1 {
 }
 
 .control-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
   color: var(--text-color);
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 1.8rem;
   border-radius: 50px;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  box-shadow: 0 4px 10px var(--shadow-color);
 }
 
 .control-btn:active {
-  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.95);
+  background: var(--border-color);
+  box-shadow: none;
 }
 
 .control-btn.minus {
-  background: rgba(255, 61, 0, 0.2);
-  color: #ff9e80;
+  background: rgba(0, 229, 255, 0.1);
+  color: var(--secondary-color);
+  border-color: rgba(0, 229, 255, 0.3);
 }
 
 /* --- Volleyball Specific --- */
 .sets-display {
   display: flex;
-  gap: 0.5rem;
-  font-size: 1.5rem;
+  gap: 0.8rem;
+  font-size: 1.6rem;
   color: var(--primary-color);
-  font-weight: bold;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(157, 78, 221, 0.4);
+}
+
+body.light-mode .sets-display {
+  text-shadow: none;
 }
 
 /* --- Futsal Specific --- */
@@ -243,21 +314,25 @@ header h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #000;
-  padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid #333;
+  background: var(--surface-color);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 15px var(--shadow-color);
+  border: 1px solid var(--border-color);
 }
 
 .timer {
-  font-size: 3rem;
-  font-family: monospace;
+  font-size: 3.5rem;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
   color: var(--primary-color);
   cursor: pointer;
+  line-height: 1;
 }
 
 .timer.paused {
-  color: var(--secondary-color);
+  color: var(--primary-color);
+  opacity: 0.6;
 }
 
 /* --- Custom Modal --- */
@@ -268,12 +343,13 @@ header h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(5px);
+  background: rgba(15, 11, 41, 0.85);
+  /* Deep purple overlay */
+  backdrop-filter: blur(8px);
   z-index: 1000;
   justify-content: center;
   align-items: center;
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 .modal-overlay.active {
@@ -282,18 +358,18 @@ header h1 {
 
 .modal-content {
   background: var(--surface-color);
-  padding: 2rem;
-  border-radius: 20px;
-  width: 80%;
-  max-width: 350px;
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  width: 85%;
+  max-width: 340px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transform: scale(0.9);
-  animation: scaleIn 0.2s ease forwards;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--border-color);
+  transform: scale(0.95);
+  animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes scaleIn {
+@keyframes modalPop {
   to {
     transform: scale(1);
   }
@@ -302,50 +378,52 @@ header h1 {
 .modal-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   justify-content: center;
 }
 
 .modal-btn {
-  padding: 0.8rem 1.5rem;
-  border-radius: 12px;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
   border: none;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   flex: 1;
 }
 
 .modal-btn.cancel {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-color);
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border-color);
+}
+
+.modal-btn.confirm {
+  background: var(--primary-color);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
 }
 
 .modal-input {
   width: 100%;
-  padding: 10px;
-  margin: 15px 0;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  font-size: 1.5rem;
-  border-radius: 8px;
+  padding: 12px;
+  margin: 20px 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-size: 1.4rem;
+  border-radius: var(--radius-sm);
   text-align: center;
   outline: none;
 }
 
 .modal-input:focus {
   border-color: var(--primary-color);
-}
-
-.modal-btn.confirm {
-  background: var(--primary-color);
-  color: #000;
+  box-shadow: 0 0 0 2px rgba(157, 78, 221, 0.3);
 }
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 768px) {
-
-  /* Compact Header */
   header {
     padding: 0.8rem;
   }
@@ -354,72 +432,46 @@ header h1 {
     font-size: 1rem;
   }
 
-  /* Adjust Menu for smaller screens */
   .menu-card {
-    width: 90%;
-    padding: 1.5rem;
-    max-width: none;
-    /* Let it stretch a bit more on small phones */
+    padding: 2rem;
   }
 
-  .card-icon {
-    font-size: 2.5rem;
-  }
-
-  /* Scoreboard Adjustments */
   .scoreboard {
     padding: 0.5rem;
-    gap: 0.5rem;
-    overflow-y: auto;
-    /* Safety scrolling */
-    min-height: 0;
-    /* Important for grid/flex nested scrolling */
+    gap: 0.8rem;
   }
 
   .score-area {
     gap: 0.5rem;
-    /* Reduce gap between teams */
   }
 
   .team-column {
-    border-radius: 12px;
+    border-radius: var(--radius-md);
   }
 
   .team-name {
-    font-size: 1rem;
-    top: 0.5rem;
-    /* Move up slightly */
+    font-size: 0.85rem;
+    top: 1rem;
   }
 
   .score-btn {
     font-size: 18vw;
-    /* default mobile */
   }
 
-  /* Adjust controls buttons */
   .control-btn {
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
 
-  .sets-display {
-    font-size: 1.2rem;
-  }
-
-  /* Futsal Specific */
   .timer {
-    font-size: 2.5rem;
-  }
-
-  .timer-container {
-    padding: 0.8rem;
+    font-size: 3rem;
   }
 }
 
 /* --- Landscape Mode (Mobile & Tablet) --- */
 @media (orientation: landscape) and (max-width: 1024px) {
   header {
-    padding: 0.2rem 1rem;
+    padding: 0.4rem 1rem;
     min-height: 40px;
   }
 
@@ -437,44 +489,36 @@ header h1 {
     padding: 0;
   }
 
-  /* Make menu side-by-side in landscape */
   #menu-view {
     flex-direction: row;
-    align-items: center;
     padding: 1rem;
+    gap: 1rem;
   }
 
   .menu-card {
-    width: 40%;
-    margin: 0 1rem;
+    width: 45%;
+    margin: 0;
     padding: 1.5rem;
   }
 
-  /* GRID LAYOUT FOR LANDSCAPE SCOREBOARD */
+  /* GRID LAYOUT REFINED */
   .scoreboard {
     display: grid;
     grid-template-columns: 1fr 200px 1fr;
-    /* Team Left | Center Info | Team Right */
     grid-template-rows: auto auto;
-    /* Info row | Controls row */
     grid-template-areas:
       "teamA info teamB"
       "teamA controls teamB";
     gap: 0.5rem 1rem;
-    /* Row gap | Col gap */
-    align-items: center;
-    justify-content: center;
     padding: 0.5rem 1rem;
     height: 100%;
     overflow-y: hidden;
   }
 
-  /* Use display: contents to unwrap the .score-area */
   .score-area {
     display: contents;
   }
 
-  /* Team Columns span 2 rows to fill height */
   .team-column:nth-child(1) {
     grid-area: teamA;
     height: 100%;
@@ -487,27 +531,22 @@ header h1 {
     max-height: 85dvh;
   }
 
-  /* Center Top: Timer or Sets */
   .sets-display,
   .timer-container {
     grid-area: info;
     align-self: end;
-    /* Push to bottom of its cell (closer to controls) */
     margin: 0;
     z-index: 2;
   }
 
-  /* Center Bottom: Controls */
   .controls {
     grid-area: controls;
     align-self: start;
-    /* Push to top of its cell (closer to timer) */
     margin: 0;
     flex-direction: column;
     z-index: 2;
   }
 
-  /* Ensure content inside team columns is centered */
   .team-column {
     display: flex;
     flex-direction: column;
@@ -517,20 +556,15 @@ header h1 {
 
   .score-btn {
     font-size: 15vh;
-    margin: 0;
   }
 
   .team-name {
     position: static;
-    margin-bottom: 0.5rem;
-  }
-
-  .sets-display {
-    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
   }
 
   .timer {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 }
 
@@ -546,6 +580,6 @@ header h1 {
   }
 
   .team-name {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 }
